@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  user-db:
+    image: mysql:latest
+    container_name: user-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userdb
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - ecommerce-network
+
+  order-db:
+    image: mysql:latest
+    container_name: order-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: orderdb
+    ports:
+      - "3307:3306"
+    restart: always
+    networks:
+      - ecommerce-network
+
+  product-db:
+    image: mongo
+    container_name: product-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    restart: always
+    networks:
+      - ecommerce-network
+
+networks:
+    ecommerce-network:
+      driver: bridge
