@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';   
 import { prisma } from "./utils/prisma";
+import userRoutes from "./routes/user.routes";
 
 const app = express();
 
@@ -16,14 +17,16 @@ app.get('/', (req, res) => {
 
 
 
-app.get(
-  "/users",
-  async (_req, res) => {
-    const users =
-      await prisma.user.findMany();
 
-    res.json(users);
-  },
-);
+app.use("/api/v1", userRoutes);
+// app.get(
+//   "/users",
+//   async (_req, res) => {
+//     const users =
+//       await prisma.user.findMany();
+
+//     res.json(users);
+//   },
+// );
 
 export default app;
