@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';   
 import { prisma } from "./utils/prisma";
 import userRoutes from "./routes/user.routes";
+import { errorHandler } from "./middlewares/error.middleware";
 
 const app = express();
 
@@ -28,5 +29,7 @@ app.use("/api/v1", userRoutes);
 //     res.json(users);
 //   },
 // );
+
+app.use(errorHandler);
 
 export default app;

@@ -1,3 +1,4 @@
+import { AppError } from "../middlewares/AppError";
 import { UserRepository } from "../repositories/user.repository";
 import bcrypt from "bcrypt";
 
@@ -13,13 +14,19 @@ export class UserService {
     return await this.userRepository.findAll();
   };
 
-  createUser = async (userData: { email: string; password: string; name: string }) => {
-    console.log(`UserService: Creating user with email: ${userData.email}`);
+  createUser = async (userData: {
+    email: string;
+    password: string;
+    name: string;
+  }) => {
     const existingUser = await this.userRepository.findByEmail(userData.email);
     if (existingUser) {
-      throw new Error("User already exists");
+      throw new AppError("User already exists", 400);
     }
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-    return await this.userRepository.create({ ...userData, password: hashedPassword });
+    return await this.userRepository.create({
+      ...userData,
+      password: hashedPassword,
+    });
   };
 }

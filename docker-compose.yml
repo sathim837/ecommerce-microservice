@@ -9,6 +9,8 @@ services:
       MARIADB_DATABASE: userdb
     ports:
       - "3306:3306"
+    volumes:
+      - user-db-data:/var/lib/mysql
     restart: always
     networks:
       - ecommerce-network
@@ -37,6 +39,9 @@ services:
     networks:
       - ecommerce-network
 
+volumes:
+  user-db-data:
+  
 networks:
     ecommerce-network:
       driver: bridge
