@@ -31,4 +31,16 @@ export class UserController {
       data: user,
     });
   });
+
+  loginUser = asyncHandler(async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    const result = await this.userService.loginUser(email, password);
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      data: result,
+    });
+  });
 }

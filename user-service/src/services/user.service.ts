@@ -1,6 +1,7 @@
 import { AppError } from "../middlewares/AppError";
 import { UserRepository } from "../repositories/user.repository";
 import bcrypt from "bcrypt";
+import { generateToken } from "../utils/jwt";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -29,4 +30,29 @@ export class UserService {
       password: hashedPassword,
     });
   };
+
+  async loginUser(email: string, password: string) {
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new AppError("Invalid email", 401);
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new AppError("Invalid password", 401);
+    }
+
+    const token = generateToken({
+      userId: user.id,
+      email: user.email,
+      role: user.role
+    });
+
+    return {
+      user,
+      token,
+    };
+  }
 }
