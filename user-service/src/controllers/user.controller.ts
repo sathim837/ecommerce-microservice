@@ -2,6 +2,7 @@ import { UserService } from "../services/user.service";
 import { Request, Response } from "express";
 import { UserRegisterDto } from "../dtos/user-register";
 import { asyncHandler } from "../utils/AsyncHandler";
+import { AuthRequest } from "../types/auth-request";
 
 export class UserController {
   private userService: UserService;
@@ -43,4 +44,18 @@ export class UserController {
       data: result,
     });
   });
+
+  getProfile = asyncHandler(async (req: Request, res: Response) => {
+    
+     const userId =
+      (req as AuthRequest).user.userId;
+
+    const user = await this.userService.getProfile(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Profile retrieved successfully",
+      data: user,
+    });
+  });           
 }

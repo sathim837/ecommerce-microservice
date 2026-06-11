@@ -19,4 +19,11 @@ export class UserRepository {
             data: userData
         });
     }
+
+    async findById(id: string) {
+        console.log(`UserRepository: Fetching user by ID: ${id}`);
+        return await prisma.user.findUnique({
+            where: { id }
+        });
+    }
 }

@@ -1,10 +1,13 @@
 import jwt from "jsonwebtoken";
 import { AppError } from '../middlewares/AppError';
 
-interface JwtPayload {
-    userId: string;
-    email: string;
-    role: string;
+
+
+
+export interface JwtPayload {
+  userId: string;
+  email: string;
+  role: string;
 }
 
 export const generateToken = (payload: JwtPayload): string => {
@@ -16,3 +19,12 @@ export const generateToken = (payload: JwtPayload): string => {
         expiresIn: process.env.JWT_EXPIRES_IN,
     } as jwt.SignOptions);
 }
+
+export const verifyToken = (
+  token: string
+) => {
+  return jwt.verify(
+    token,
+    process.env.JWT_SECRET!
+  ) as JwtPayload;
+};
