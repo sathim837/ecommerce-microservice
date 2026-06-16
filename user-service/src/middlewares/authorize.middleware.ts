@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../middlewares/AppError";
+import { AuthRequest } from "../types/auth-request";
 
 export const authorize =
   (...roles: string[]) =>
@@ -9,7 +10,10 @@ export const authorize =
     next: NextFunction
   ) => {
 
-    if (!req.user) {
+    
+
+    const requser = (req as AuthRequest).user;
+    if (!requser) {
       return next(
         new AppError(
           "Unauthorized",
@@ -20,7 +24,7 @@ export const authorize =
 
     if (
       !roles.includes(
-        req.user.role
+        requser.role
       )
     ) {
       return next(

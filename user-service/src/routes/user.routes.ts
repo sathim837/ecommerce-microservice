@@ -4,6 +4,7 @@ import {validate} from "../middlewares/validate.middleware";
 import { UserRegisterDto } from "../dtos/user-register";
 import { UserLoginDto } from "../dtos/user-login.dto";
 import { authenticate } from "../middlewares/auth.middleware";
+import { authorize } from "../middlewares/authorize.middleware";
 
 const router = Router();
 const userController = new UserController();
@@ -30,6 +31,13 @@ router.get(
   "/me",
   authenticate,
   userController.getProfile
+);
+
+router.get(
+  "/admin",
+  authenticate,
+  authorize("ADMIN"),
+  userController.adminDashboard
 );
 
 export default router;
