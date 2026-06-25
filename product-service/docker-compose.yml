@@ -1,0 +1,12 @@
+product-db:
+  image: mongo:8
+  container_name: product-db
+  ports:
+    - "27017:27017"
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: root
+    MONGO_INITDB_ROOT_PASSWORD: root
+  volumes:
+    - product-db-data:/data/db
+  networks:
+    - ecommerce-network
