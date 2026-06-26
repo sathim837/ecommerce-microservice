@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import productRoutes from "./routes/product.routes";
+import categoryRoutes from './routes/category.routes';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.use("/api/v1", productRoutes);
+app.use("/api/v1/categories", categoryRoutes);
 
 
 

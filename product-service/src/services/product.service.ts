@@ -13,7 +13,7 @@ export class ProductService {
         return product;
     }
 
-    async getAllProducts() {
-        return await this.productRepository.getAllProducts();
+    async getAllProducts(query: any) {
+        return await this.productRepository.getAllProducts(query);
     }
 }
