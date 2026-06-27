@@ -1,0 +1,16 @@
+order-db:
+  image: mariadb:11
+  container_name: order-db
+
+  environment:
+    MARIADB_ROOT_PASSWORD: root
+    MARIADB_DATABASE: orderdb
+
+  ports:
+    - "3307:3306"
+
+  volumes:
+    - order-db-data:/var/lib/mysql
+
+  networks:
+    - ecommerce-network
