@@ -7,6 +7,8 @@ const adapter = new PrismaMariaDb({
   user: process.env.DB_USER!,
   password: process.env.DB_PASSWORD!,
   database: process.env.DB_NAME!,
+
+  allowPublicKeyRetrieval: true,
 });
 
 export const prisma = new PrismaClient({
