@@ -10,6 +10,7 @@ import {
 import { CreateOrderDto } from "../types/order.types";
 import { getUser } from "../clients/user.client";
 import { getProduct, reduceStock } from "../clients/product.client";
+import { publishOrderCreated } from "../publishers/order.publisher";
 
 export const createOrderService = async (
   orderData: CreateOrderDto
@@ -67,6 +68,13 @@ export const createOrderService = async (
     );
 
   });
+
+  await publishOrderCreated({
+  orderId: order.id,
+  userId: order.userId,
+  totalAmount: order.totalAmount,
+  status: order.status,
+});
 
   // Reduce stock after successful order creation
   for (const item of orderData.items) {
