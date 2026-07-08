@@ -39,6 +39,8 @@ services:
     networks:
       - ecommerce-network
 
+      
+
 volumes:
   user-db-data:
   

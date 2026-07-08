@@ -3,8 +3,6 @@ import { ProductService } from "../services/product.service";
 export class ProductController {
   constructor(private productService = new ProductService()) {}
 
-  
-
   createProduct = async (req: any, res: any) => {
     //  console.log("this =", this);
     try {
@@ -25,6 +23,37 @@ export class ProductController {
       });
     } catch (error) {
       res.status(500).json({ message: "Error fetching products", error });
+    }
+  };
+
+  getProductById = async (req: any, res: any) => {
+    try {
+      const product = await this.productService.getProductByIdService(
+        req.params.id,
+      );
+
+      res.json(product);
+    } catch (error: any) {
+      res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };
+
+  updateStock = async (req: any, res: any) => {
+    try {
+      const product = await this.productService.updateStockService(
+        req.params.id,
+        req.body.quantity,
+      );
+
+      res.json(product);
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        message: error.message,
+      });
     }
   };
 }

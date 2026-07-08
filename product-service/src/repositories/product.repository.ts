@@ -56,4 +56,22 @@ export class ProductRepository {
       products,
     };
   }
+
+  getProductByIdRepository = async (id: string) => {
+    return await Product.findById(id);
+  };
+
+  updateStockRepository = async (id: string, quantity: number) => {
+    return await Product.findByIdAndUpdate(
+      id,
+      {
+        $inc: {
+          stock: -quantity,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+  };
 }

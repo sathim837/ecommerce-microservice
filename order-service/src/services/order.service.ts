@@ -1,49 +1,100 @@
-import {prisma } from "../config/prisma";
-import {Prisma} from "../generated/prisma/client";
-import { createOrder, findAllOrders, findOrderById, updateOrderStatus, deleteOrder } from "../repositories/order.repository";
+import { prisma } from "../config/prisma";
+import { Prisma } from "../generated/prisma/client";
+import {
+  createOrder,
+  findAllOrders,
+  findOrderById,
+  updateOrderStatus,
+  deleteOrder,
+} from "../repositories/order.repository";
 import { CreateOrderDto } from "../types/order.types";
+import { getUser } from "../clients/user.client";
+import { getProduct, reduceStock } from "../clients/product.client";
 
-export const createOrderService = async (orderData: CreateOrderDto) => {
+export const createOrderService = async (
+  orderData: CreateOrderDto
+) => {
 
-  return await prisma.$transaction(async (tx) => {
-    let totalAmount = 0;
+  // Verify user exists
+  await getUser(orderData.userId);
 
-    const orderItemsData = orderData.items.map((item) => {
+  let totalAmount = 0;
 
-        const price = 10; // Replace this with the actual price retrieval logic
-        const subTotal = item.quantity * price;
-        totalAmount += subTotal;
-      return {
-        productId: item.productId,
-        productName: "Sample Product", // Replace this with the actual product name retrieval logic
-        quantity: item.quantity,
-        price: new Prisma.Decimal(price),
-        subtotal: new Prisma.Decimal(subTotal),
-      };
+  const orderItems = [];
+
+  // Fetch products & validate stock
+  for (const item of orderData.items) {
+
+    const product = await getProduct(item.productId);
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    if (product.stock < item.quantity) {
+      throw new Error(
+        `Insufficient stock for ${product.name}`
+      );
+    }
+
+    const subtotal =
+      product.price * item.quantity;
+
+    totalAmount += subtotal;
+
+    orderItems.push({
+      productId: product._id,
+      productName: product.name,
+      quantity: item.quantity,
+      price: product.price,
+      subtotal,
     });
-     return await createOrder(tx, {
-        userId: "sampleUserId", // Replace this with the actual user ID retrieval logic
-        totalAmount: new Prisma.Decimal(totalAmount),
+
+  }
+
+  // Create order in a transaction
+  const order = await prisma.$transaction(async (tx) => {
+
+    return createOrder(
+      tx,
+      {
+        userId: orderData.userId,
+        totalAmount,
         items: {
-          create: orderItemsData,
+          create: orderItems,
         },
-      });
+      }
+    );
+
   });
-}
+
+  // Reduce stock after successful order creation
+  for (const item of orderData.items) {
+    await reduceStock(
+      item.productId,
+      item.quantity
+    );
+  }
+
+  return order;
+
+};
 
 export const getAllOrder = async () => {
   return await findAllOrders();
-}
+};
 
 export const getOrderById = async (orderId: string) => {
   return await findOrderById(orderId);
-}   
+};
 
-export const updateOrderStatusService = async (orderId: string, status: any) => {
+export const updateOrderStatusService = async (
+  orderId: string,
+  status: any,
+) => {
   return await updateOrderStatus(orderId, status);
-}
+};
 
 export const deleteOrderService = async (orderId: string) => {
   return await deleteOrder(orderId);
-}
-     
+};

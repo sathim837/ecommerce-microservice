@@ -64,5 +64,31 @@ export class UserController {
       success: true,
       message: "Welcome to the admin dashboard",
     });
-  } );                                                                                      
+  } ); 
+  
+  
+ getUserById = async (
+  req: Request,
+  res: Response
+) => {
+
+  try {
+
+    const user =
+      await this.userService.getUserByIdService(
+        Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+      );
+
+    res.status(200).json(user);
+
+  } catch (error: any) {
+
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+
+};
 }

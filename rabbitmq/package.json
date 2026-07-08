@@ -1,0 +1,26 @@
+{
+  "name": "rabbitmq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "producer": "ts-node producer.ts",
+    "consumer": "ts-node consumer.ts",
+    "exchange-producer": "ts-node exchange-producer.ts",
+    "exchange-consumer1": "ts-node exchange-consumer1.ts",
+    "exchange-consumer2": "ts-node exchange-consumer2.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
+  }
+}

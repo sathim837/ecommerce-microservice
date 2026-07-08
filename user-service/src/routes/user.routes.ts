@@ -34,6 +34,11 @@ router.get(
 );
 
 router.get(
+  "/:id",
+  userController.getUserById
+);
+
+router.get(
   "/admin",
   authenticate,
   authorize("ADMIN"),

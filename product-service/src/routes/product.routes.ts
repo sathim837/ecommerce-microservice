@@ -14,4 +14,15 @@ router.get(
   productController.getAllProducts
 );
 
+router.get(
+  "/:id",
+  productController.getProductById
+);
+
+router.patch(
+  "/:id/stock",
+  productController.updateStock
+);
+
+
 export default router;

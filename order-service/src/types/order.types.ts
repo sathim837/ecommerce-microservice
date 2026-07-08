@@ -5,7 +5,7 @@ export interface CreateOrderItemDto {
 }
 
 export interface CreateOrderDto {
-  customerId: string;
+  userId: string;
   items: CreateOrderItemDto[];
 //   totalAmount: number;
 //   status: 'pending' | 'completed' | 'cancelled';
