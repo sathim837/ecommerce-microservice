@@ -11,11 +11,9 @@ import { CreateOrderDto } from "../types/order.types";
 import { getUser } from "../clients/user.client";
 import { getProduct, reduceStock } from "../clients/product.client";
 import { publishOrderCreated } from "../publishers/order.publisher";
+import { randomUUID } from "crypto";
 
-export const createOrderService = async (
-  orderData: CreateOrderDto
-) => {
-
+export const createOrderService = async (orderData: CreateOrderDto) => {
   // Verify user exists
   await getUser(orderData.userId);
 
@@ -25,7 +23,6 @@ export const createOrderService = async (
 
   // Fetch products & validate stock
   for (const item of orderData.items) {
-
     const product = await getProduct(item.productId);
 
     if (!product) {
@@ -33,13 +30,10 @@ export const createOrderService = async (
     }
 
     if (product.stock < item.quantity) {
-      throw new Error(
-        `Insufficient stock for ${product.name}`
-      );
+      throw new Error(`Insufficient stock for ${product.name}`);
     }
 
-    const subtotal =
-      product.price * item.quantity;
+    const subtotal = product.price * item.quantity;
 
     totalAmount += subtotal;
 
@@ -50,42 +44,37 @@ export const createOrderService = async (
       price: product.price,
       subtotal,
     });
-
   }
 
   // Create order in a transaction
   const order = await prisma.$transaction(async (tx) => {
-
-    return createOrder(
-      tx,
-      {
-        userId: orderData.userId,
-        totalAmount,
-        items: {
-          create: orderItems,
-        },
-      }
-    );
-
+    return createOrder(tx, {
+      userId: orderData.userId,
+      totalAmount,
+      items: {
+        create: orderItems,
+      },
+    });
   });
 
   await publishOrderCreated({
-  orderId: order.id,
-  userId: order.userId,
-  totalAmount: order.totalAmount,
-  status: order.status,
-});
+    eventId: randomUUID(),
+    orderId: order.id,
+    userId: order.userId,
+    totalAmount: Number(order.totalAmount),
+    status: order.status,
+    items: orderData.items.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+    })),
+  });
 
   // Reduce stock after successful order creation
-  for (const item of orderData.items) {
-    await reduceStock(
-      item.productId,
-      item.quantity
-    );
-  }
+  // for (const item of orderData.items) {
+  //   await reduceStock(item.productId, item.quantity);
+  // }
 
   return order;
-
 };
 
 export const getAllOrder = async () => {
