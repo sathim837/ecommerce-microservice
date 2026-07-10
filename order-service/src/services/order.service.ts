@@ -19,7 +19,16 @@ export const createOrderService = async (orderData: CreateOrderDto) => {
 
   let totalAmount = 0;
 
-  const orderItems = [];
+  type OrderItemData = {
+    productId: string;
+    productName: string;
+    quantity: number;
+    price: number;
+    subtotal: number;
+  };
+
+  // const orderItems = [];
+  const orderItems: OrderItemData[] = [];
 
   // Fetch products & validate stock
   for (const item of orderData.items) {
