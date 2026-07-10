@@ -17,3 +17,48 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      # ===========================
+      # API Gateway
+      # ===========================
+      - name: Install API Gatewaty Dependencies
+        working-directory: ./api-gateway
+        run: npm ci
+
+      - name: Build API Gateway
+        working-directory: ./api-gateway
+        run: npm run build
+
+      # ===========================
+      # User Service
+      # ===========================
+      - name: Install User Service Dependencies
+        working-directory: ./user-service
+        run: npm ci
+
+      - name: Build User Service
+        working-directory: ./user-service 
+        run: npm run build
+
+      # ===========================
+      # Order Service 
+      # ===========================
+
+      - name: Install Order Service Dependencies
+        working-directory: ./order-service
+        run: npm ci
+
+      - name: Build Order Service
+        working-directory: ./order-service
+        run: npm run build
+
+      # ===========================
+      # Product Service 
+      # ===========================
+      - name: Install Product Service Dependencies
+        working-directory: ./product-service
+        run: npm ci
+
+      - name: Build Product Service
+        working-directory: ./product-service
+        run: npm run build
