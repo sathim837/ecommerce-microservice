@@ -1,51 +1,82 @@
 import { useState } from "react";
-import { login } from "../services/auth.service";
+import { login as loginUser } from "../services/auth.service";
+
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
-      const response = await login({
+      const response = await loginUser({
         email,
         password,
       });
-      localStorage.setItem("token", response.data.token);
+
+      login(response.data.user, response.data.token);
+
+      console.log("Login successful:", response);
+
       navigate("/products");
-      //  console.log("Login successful:", response);
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
   return (
-    <>
-      <h1>Login</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+    <div className="min-h-screen bg-slate-900 text-white">
+      <Navbar />
 
-      <br />
-      <br />
+      <div className="flex justify-center items-center py-20 px-6">
+        <div className="w-full max-w-md bg-slate-800 rounded-xl shadow-lg p-8">
+          <h1 className="text-3xl font-bold text-center">Welcome Back</h1>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <p className="text-slate-400 text-center mt-2">
+            Login to your account
+          </p>
 
-      <br />
-      <br />
+          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+            <div>
+              <label className="block mb-2 text-sm font-medium">Email</label>
 
-      <button onClick={handleLogin}>Login</button>
-    </>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-lg bg-slate-700 border border-slate-600 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-medium">Password</label>
+
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg bg-slate-700 border border-slate-600 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 transition py-3 rounded-lg font-semibold"
+            >
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }
 

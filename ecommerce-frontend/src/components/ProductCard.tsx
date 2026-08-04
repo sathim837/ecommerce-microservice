@@ -1,4 +1,5 @@
 import type { Product } from "../types/product";
+import { Link } from "react-router-dom";
 
 interface Props {
   product: Product;
@@ -7,23 +8,16 @@ interface Props {
 function ProductCard({ product }: Props) {
   return (
     <div className="bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/20 transition hover:-translate-y-2">
-
       <div className="h-56 bg-slate-700 flex items-center justify-center text-7xl">
         📱
       </div>
 
       <div className="p-6">
+        <h3 className="text-2xl font-semibold">{product.name}</h3>
 
-        <h3 className="text-2xl font-semibold">
-          {product.name}
-        </h3>
-
-        <p className="text-slate-400 mt-2">
-          {product.description}
-        </p>
+        <p className="text-slate-400 mt-2">{product.description}</p>
 
         <div className="flex justify-between items-center mt-5">
-
           <span className="text-blue-400 font-bold text-2xl">
             ${product.price}
           </span>
@@ -37,17 +31,15 @@ function ProductCard({ product }: Props) {
               Out of Stock
             </span>
           )}
-
         </div>
 
-        <button
-          className="w-full mt-6 bg-blue-600 py-3 rounded-lg hover:bg-blue-700 transition"
+        <Link
+          to={`/products/${product._id}`}
+          className="block w-full mt-6 bg-blue-600 py-3 rounded-lg text-center hover:bg-blue-700 transition"
         >
           View Details
-        </button>
-
+        </Link>
       </div>
-
     </div>
   );
 }

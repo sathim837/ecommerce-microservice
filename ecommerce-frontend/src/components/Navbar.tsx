@@ -1,52 +1,47 @@
-import { ShoppingCart, User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
-  const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-700">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-4">
+    <nav className="bg-slate-800 text-white px-8 py-4 flex justify-between">
 
-        <h1
-          onClick={() => navigate("/")}
-          className="text-3xl font-bold text-blue-500 cursor-pointer"
-        >
-          E-Commerce
-        </h1>
+      <Link to="/">
+        Ecommerce
+      </Link>
 
-        <nav className="flex items-center gap-8">
+      <div className="flex gap-6 items-center">
 
-          <button
-            onClick={() => navigate("/")}
-            className="hover:text-blue-400 transition"
+        <Link to="/">Home</Link>
+
+        <Link to="/products">Products</Link>
+
+        {isAuthenticated ? (
+          <>
+            <span>
+              👤 {user?.name}
+            </span>
+
+            <button
+              onClick={logout}
+              className="bg-red-600 px-4 py-2 rounded-lg"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link
+            to="/login"
+            className="bg-blue-600 px-4 py-2 rounded-lg"
           >
-            Home
-          </button>
-
-          <button
-            onClick={() => navigate("/products")}
-            className="hover:text-blue-400 transition"
-          >
-            Products
-          </button>
-
-          <ShoppingCart
-            className="cursor-pointer hover:text-blue-400"
-            size={22}
-          />
-
-          <button
-            onClick={() => navigate("/login")}
-            className="flex items-center gap-2 bg-blue-600 px-5 py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            <User size={18} />
             Login
-          </button>
+          </Link>
+        )}
 
-        </nav>
       </div>
-    </header>
+
+    </nav>
   );
 }
 

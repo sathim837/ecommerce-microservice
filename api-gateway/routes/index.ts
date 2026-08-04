@@ -26,6 +26,10 @@ router.use(
       process.env.ORDER_SERVICE_URL,
 
     changeOrigin: true,
+    pathRewrite: {
+      "^/" : "/api/v1/"
+    },
+    logger: console
   })
 );
 
@@ -36,6 +40,10 @@ router.use(
       process.env.PRODUCT_SERVICE_URL,
 
     changeOrigin: true,
+    pathRewrite: {
+      "^/" : "/api/v1/"
+    },
+    logger: console
   })
 );
 
