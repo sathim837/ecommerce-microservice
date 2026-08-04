@@ -1,4 +1,5 @@
-import productApi from "../api/productApi";
+// import productApi from "../api/productApi";
+import api from "../api/axios";
 
 interface ProductQuery {
   page?: number;
@@ -13,7 +14,7 @@ export const getProducts = async ({
   search = "",
   maxPrice,
 }: ProductQuery = {}) => {
-  const response = await productApi.get("/api/v1", {
+  const response = await api.get("/products", {
     params: {
       page,
       limit,
@@ -26,7 +27,7 @@ export const getProducts = async ({
 };
 
 export const getProductById = async (id: string) => {
-  const response = await productApi.get(`/api/v1/${id}`);
+  const response = await api.get(`/products/${id}`);
 
   return response.data;
 };
