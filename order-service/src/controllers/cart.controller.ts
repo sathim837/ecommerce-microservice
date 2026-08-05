@@ -56,3 +56,85 @@ export const getCart = async (
     next(error);
   }
 };
+
+export const updateCartItem = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.headers.authorization!;
+
+    // Verify authenticated user
+    await getCurrentUser(token);
+
+    
+    const { quantity } = req.body;
+
+    const itemId = req.params.itemId as string;
+
+    const updatedCartItem = await cartService.updateCartItem(
+      itemId,
+      quantity
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Cart updated successfully.",
+      data: updatedCartItem,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+interface RemoveCartParams {
+  itemId: string;
+}
+
+export const removeCartItem = async (
+  req: Request<RemoveCartParams>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.headers.authorization!;
+
+    // Verify logged-in user
+    await getCurrentUser(token);
+
+    const { itemId } = req.params;
+
+    await cartService.removeCartItem(itemId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Item removed from cart successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const clearCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+
+    const token = req.headers.authorization!;
+
+    const user = await getCurrentUser(token);
+
+    await cartService.clearCart(user.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Cart cleared successfully.",
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};

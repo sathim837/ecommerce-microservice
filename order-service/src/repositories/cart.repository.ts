@@ -60,3 +60,28 @@ export const updateCartItemQuantity = async (
     },
   });
 };
+
+export const findCartItemById = async (cartItemId: string) => {
+  return await prisma.cartItem.findUnique({
+    where: {
+      id: cartItemId,
+    },
+  });
+};
+
+export const deleteCartItem = async (cartItemId: string) => {
+  return await prisma.cartItem.delete({
+    where: {
+      id: cartItemId,
+    },
+  });
+};
+
+
+export const clearCart = async (cartId: string) => {
+  return await prisma.cartItem.deleteMany({
+    where: {
+      cartId,
+    },
+  });
+};
