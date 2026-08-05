@@ -23,7 +23,13 @@ export class UserRepository {
     async findById(id: string) {
         console.log(`UserRepository: Fetching user by ID: ${id}`);
         return await prisma.user.findUnique({
-            where: { id }
+            where: { id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+            }
         });
     }
 }

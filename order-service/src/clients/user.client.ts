@@ -1,11 +1,31 @@
 import { http } from "../lib/axios";
 
 export const getUser = async (userId: string) => {
-    try {
-        const response = await http.get(`${process.env.USER_SERVICE_URL}/api/v1/${userId}`);
-        return response.data;
-    } catch (error) {
-        console.error(`Error fetching user with ID ${userId}:`, error);
-        throw error;
-    }
+  try {
+    const response = await http.get(
+      `${process.env.USER_SERVICE_URL}/api/v1/${userId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching user with ID ${userId}:`, error);
+    throw error;
+  }
+};
+
+export const getCurrentUser = async (token: string) => {
+  try {
+    const response = await http.get(
+      `${process.env.API_GATEWAY_URL}/api/users/me`,
+      {
+        headers: {
+          Authorization: token,
+        },
+      },
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error(`Error fetching user`, error);
+    throw error;
+  }
 };

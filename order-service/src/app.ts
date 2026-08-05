@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import orderRoutes from "./routes/order.route";
+import cartRoutes from "./routes/cart.route";
 import { prisma } from "./config/prisma";
 
 const app = express();
@@ -20,6 +21,7 @@ app.get("/health", (_, res) => {
 });
 
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/cart", cartRoutes);
 
 app.get("/test-db", async (_, res) => {
   try {
