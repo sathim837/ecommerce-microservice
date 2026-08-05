@@ -47,3 +47,33 @@ export const addToCart = async (
     subtotal: product.price * quantity
   });
 };
+
+export const getCart = async (userId: string) => {
+  const cart = await cartRepository.findCartByUser(userId);
+
+  if (!cart) {
+    return {
+      items: [],
+      totalAmount: 0,
+    };
+  }
+
+  const items = cart.items.map((item) => ({
+    id: item.id,
+    productId: item.productId,
+    productName: item.productName,
+    price: item.price.toNumber(),
+    quantity: item.quantity,
+    subtotal: item.price.toNumber() * item.quantity,
+  }));
+
+  const totalAmount = items.reduce(
+    (sum, item) => sum + item.subtotal,
+    0
+  );
+
+  return {
+    items,
+    totalAmount,
+  };
+};

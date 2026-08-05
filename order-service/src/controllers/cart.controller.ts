@@ -34,3 +34,25 @@ export const addToCart = async (
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const getCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.headers.authorization!;
+
+    const user = await getCurrentUser(token);
+
+    const cart = await cartService.getCart(user.id);
+
+    return res.status(200).json({
+      success: true,
+      data: cart,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};

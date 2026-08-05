@@ -8,4 +8,6 @@ router.post(
   cartController.addToCart
 );
 
+router.get("/", cartController.getCart);
+
 export default router;
