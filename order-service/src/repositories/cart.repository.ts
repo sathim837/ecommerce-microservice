@@ -85,3 +85,15 @@ export const clearCart = async (cartId: string) => {
     },
   });
 };
+
+
+export const clearCartTx = async (
+  tx: Prisma.TransactionClient,
+  cartId: string
+) => {
+  return await tx.cartItem.deleteMany({
+    where: {
+      cartId,
+    },
+  });
+};
